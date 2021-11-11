@@ -29,11 +29,11 @@ class Routes extends React.Component {
 
     return (
       <Switch>
-        <Route exact path='/' component={(props) => <Landing role = {this.props.role} auth={this.props.auth} {...props} />} />
-        <ProtectedRoute exact path="/register" component={Register} />
-        <ProtectedRoute exact path="/login" component={(props) => <Login login={this.props.login} {...props} />} />
-        <PrivateRoute exact path="/profile" component={Profile} />
-        <PrivateRoute exact path='/dashboard' component={(props) => <Dashboard {...props} />} />
+        <Route exact path='/' component={(props) => <Landing role = {this.props.role} auth={true} {...props} />} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/login" component={(props) => <Login login={this.props.login} {...props} />} />
+        <Route exact path="/profile" component={Profile} />
+        <Route exact path='/dashboard' component={(props) => <Dashboard {...props} />} />
         {/* Redirect to landing page if page does not exist */}
         <Redirect to='/' />
       </Switch>
