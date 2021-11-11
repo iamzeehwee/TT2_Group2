@@ -2,10 +2,14 @@ const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
 const AuthenticationController = require("./src/controllers/AuthenticationController.js");
+const CORS_OPTIONS = {
+  credentials: true,
+  origin: "http://localhost:3000"
+};
 
 // Initialize an variable called app
 const app = express();
-app.use(cors());
+app.use(cors(CORS_OPTIONS));
 
 // Body parser to parse request data (raw and form submission)
 // Note that this must be written at the top of index.js, before the routing code
@@ -18,7 +22,7 @@ require('./src/routes/routes')(app)
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "password",
+  password: "1234",
   database: "project_expenses",
 });
 

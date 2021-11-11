@@ -21,14 +21,9 @@ class Login extends Component {
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value })
-
-    if (e.target.name === 'settingLang') {
-      setLanguage(e.target.value)
-    }
   }
 
   onSubmitStudent(e) {
-    console.log('student login')
     e.preventDefault()
     let info = this.state;
 
@@ -37,36 +32,18 @@ class Login extends Component {
       return
     }
 
-    axios.post('/student/auth/login', {
-      account: this.state.account,
+    axios.post('/login', {
+      username: this.state.account,
       password: this.state.password,
     })
       .then(res => {
-        console.log(res.data)
-        console.log(this.props)
-
-        if (res.data.login) {
-          console.log('successful login')
-          this.props.login('student')
+        console.log(res.data);
+        if (res.data[0].id) {
+          console.log('login successful')
+          // this.props.login('student')
           this.props.history.push(`/dashboard`)
-
         } else {
-          console.log('Login error')
-          let error = Constants('ERR_LOGIN')
-          switch (res.data.error) {
-            case 'this is not a student account':
-              error = 'This is not a student account'
-              break;
-            case 'password incorrect':
-              error = Constants('ERR_PASSWORD_INCORRECT')
-              break;
-            case 'no such account':
-              error = Constants('ERR_NO_ACCOUNT')
-              break;
-            default:
-              error = Constants('ERR_LOGIN')
-          }
-          this.setState({ error: error })
+          this.setState({ error: res.data.msg })
         }
       })
       .catch(err => {
