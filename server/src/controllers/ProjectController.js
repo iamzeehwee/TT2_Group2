@@ -12,21 +12,23 @@ const connection = mysql.createConnection({
 
 module.exports = {
   async addProject(req, res) {
-    const username = `${req.body.username}`;
-    const password = `${req.body.password}`;
+    const userId = `${req.body.userId}`;
     const name = `${req.body.name}`;
-    const appointment = `${req.body.appointment}`;
+    const budget = `${req.body.budget}`;
+    const description = `${req.body.description}`;
+  
 
-    const sqlSelect = `INSERT INTO user(username, password, name, appointment) VALUES (?, ?, ?, ?)`;
+    const sqlSelect = `INSERT INTO project(user_id, name, budget, description) VALUES (?, ?, ?, ?)`;
     connection.query(
       sqlSelect,
-      [username, password, name, appointment],
+      [userId, name, budget, description],
       (err, result) => {
         // If no error
         if (!err) {
-          res.status(200).json({ userID: result.insertId });
+          res.status(200).json({ projectID: result.insertId });
         } else {
-          res.status(400).json({ msg: "Error adding user" });
+          console.log("error is ssadfds", err)
+          res.status(400).json({ msg: "Error adding project" });
         }
       }
     );
