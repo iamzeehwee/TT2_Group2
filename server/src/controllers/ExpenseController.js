@@ -12,8 +12,6 @@ const connection = mysql.createConnection({
 
 module.exports = {
  async addExpenses (req, res) {
-    console.log("EXPENSES BLALALA ", req.body)
-
     const projectId = `${req.body.projectId}`;
     const categoryId = `${req.body.categoryId}`;
     const name = `${req.body.name}`;
