@@ -1,48 +1,56 @@
-import { MDBBtn, MDBCol, MDBContainer, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader, MDBRow } from 'mdbreact';
-import React, { Component } from 'react';
-import axios from '../axios';
-import TextField from '@material-ui/core/TextField';
+import {
+  MDBBtn,
+  MDBCol,
+  MDBContainer,
+  MDBModal,
+  MDBModalBody,
+  MDBModalFooter,
+  MDBModalHeader,
+  MDBRow,
+} from "mdbreact";
+import React, { Component } from "react";
+import axios from "../axios";
+import TextField from "@material-ui/core/TextField";
 
 class EditUserModal extends Component {
-
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      id : '',
-      project_id : '',
-      category_id : '',
-      name: '',
-      description: '',
-      amount: '',
-      created_at: '',
-      created_by: '',
-      updated_at: '',
-      updated_by: '',
-      error: ''
-    }
+      id: "",
+      project_id: "",
+      category_id: "",
+      name: "",
+      description: "",
+      amount: "",
+      created_at: "",
+      created_by: "",
+      updated_at: "",
+      updated_by: "",
+      error: "",
+    };
 
-    this.onChange = this.onChange.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value })
-    console.log(this.state)
+    this.setState({ [e.target.name]: e.target.value });
+    console.log(this.state);
   }
 
   onSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
     let info = this.state;
     let obj = {};
 
-    if (info.name === '' || info.description === '' || info.amount === '') { // incomplete fields
-      this.setState({ error: "Please fill in all mandatory fields." })
-      return
+    if (info.name === "" || info.description === "" || info.amount === "") {
+      // incomplete fields
+      this.setState({ error: "Please fill in all mandatory fields." });
+      return;
     }
-
-    if (this.props.type === "student") {
-
-      axios.post('student/user/updateProfile', { // update user name
+    axios
+      .post("student/user/updateProfile", {
+        // update user name
         account: info.account,
         name: info.name,
         classId: this.props.user.class_id,
@@ -51,50 +59,26 @@ class EditUserModal extends Component {
         nativeLanguage: info.nativeLanguage,
         date: info.date,
       })
-        .then(res => {
-          if (res.data.success) {
-            obj.success = true;
-            obj.message = res.data.msg;
-            obj.loggedOut = res.data.loggedOut;
-            this.closeModal();
-            this.props.submit(obj);
-          } else {
-            this.setState({ error: res.data.error })
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    } else if (this.props.type === "teacher") {
-
-      axios.post('teacher/teacher/updateProfile', { // update user name
-        account: info.account,
-        name: info.name,
-        initialAccount: info.initialAccount,
-        email: info.email,
+      .then((res) => {
+        if (res.data.success) {
+          obj.success = true;
+          obj.message = res.data.msg;
+          obj.loggedOut = res.data.loggedOut;
+          this.closeModal();
+          this.props.submit(obj);
+        } else {
+          this.setState({ error: res.data.error });
+        }
       })
-        .then(res => {
-          console.log(res.data)
-          if (res.data.success) {
-            obj.success = true;
-            obj.message = res.data.msg;
-            obj.loggedOut = res.data.loggedOut;
-            this.closeModal();
-            this.props.submit(obj);
-          } else {
-            this.setState({ error: res.data.error })
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   closeModal = () => {
     this.props.toggleModal();
     this.clearStates();
-  }
+  };
 
   showModal = () => {
     let user = this.props.user;
@@ -113,50 +97,55 @@ class EditUserModal extends Component {
       }
     }
     this.setState({
-      account: user.account,
-      name: user.name,
-      initialAccount: user.account,
-      email: user.email,
-      nativeLanguage: user.native_language,
-      date: user.date,
-      classOptions: options,
-      selectedClasses: selectedOptions,
-    })
-  }
+      id: user.id,
+      project_id: user.project_id,
+      category_id: user.category_id,
+      name: user.initialAccount,
+      description: user.description,
+      amount: user.amount,
+      created_at: user.created_at,
+      created_by: user.created_by,
+      updated_at: user.updated_at,
+      updated_by: user.updated_by,
+    });
+  };
 
   clearStates = () => {
     this.setState({
       selectedClasses: [],
-      initialName: '',
-      account: '',
-      name: '',
-      error: ''
+      initialName: "",
+      description: "",
+      amount: "",
+      error: "",
     });
-  }
+  };
 
   formatClasses = (classes) => {
     let arr = [];
     for (let cl of classes) {
-      arr.push({value: cl.class_id, label: cl.module + " Tutorial " + cl.class});
+      arr.push({
+        value: cl.class_id,
+        label: cl.module + " Tutorial " + cl.class,
+      });
     }
     return arr;
-  }
+  };
 
   displayExtraDetails = () => {
     const styles = {
       label: {
-        display: 'flex',
-        alignItems: 'center'
+        display: "flex",
+        alignItems: "center",
       },
       dropdown: {
-        width: '100%',
-        height: '40px',
-        borderColor: 'lightGray',
-        marginBottom: '20px'
+        width: "100%",
+        height: "40px",
+        borderColor: "lightGray",
+        marginBottom: "20px",
       },
       timeDate: {
-        width: '100%'
-      }
+        width: "100%",
+      },
     };
     if (this.props.type === "student") {
       return (
@@ -166,7 +155,13 @@ class EditUserModal extends Component {
               <label>Native Language</label>
             </MDBCol>
             <MDBCol md="10">
-              <select value={this.state.nativeLanguage} name="nativeLanguage" onChange={this.onChange} className="browser-default custom-select" style={styles.dropdown}>
+              <select
+                value={this.state.nativeLanguage}
+                name="nativeLanguage"
+                onChange={this.onChange}
+                className="browser-default custom-select"
+                style={styles.dropdown}
+              >
                 <option>Choose your Native Language</option>
                 <option value="Afrikaans">Afrikaans</option>
                 <option value="Albanian">Albanian</option>
@@ -262,31 +257,37 @@ class EditUserModal extends Component {
             </MDBCol>
           </MDBRow>
         </>
-      )
+      );
     }
-  }
+  };
 
   render() {
     const styles = {
       label: {
-        display: 'flex',
-        alignItems: 'center'
+        display: "flex",
+        alignItems: "center",
       },
       dropdown: {
-        width: '100%',
-        height: '40px',
-        borderColor: 'lightGray',
-        marginBottom: '20px'
+        width: "100%",
+        height: "40px",
+        borderColor: "lightGray",
+        marginBottom: "20px",
       },
       timeDate: {
-        width: '100%'
-      }
+        width: "100%",
+      },
     };
 
     return (
       <>
-        <MDBModal isOpen={this.props.modal} toggle={this.closeModal} showModal={this.showModal} size="lg" centered >
-          <MDBModalHeader toggle={this.closeModal} >Edit Profile</MDBModalHeader>
+        <MDBModal
+          isOpen={this.props.modal}
+          toggle={this.closeModal}
+          showModal={this.showModal}
+          size="lg"
+          centered
+        >
+          <MDBModalHeader toggle={this.closeModal}>Edit Expense</MDBModalHeader>
           <MDBModalBody>
             <MDBContainer>
               <form>
@@ -343,21 +344,33 @@ class EditUserModal extends Component {
 
                 {this.displayExtraDetails()}
 
-                {this.state.error !== '' &&
+                {this.state.error !== "" && (
                   <>
                     <br />
                     <p className="red-text d-flex justify-content-center mb-3 pt-2">
                       {this.state.error}
                     </p>
                   </>
-                }
+                )}
               </form>
             </MDBContainer>
           </MDBModalBody>
 
           <MDBModalFooter>
-            <MDBBtn color="indigo" onClick={this.closeModal} className="font-weight-bold">{'Cancel'}</MDBBtn>
-            <MDBBtn color="default" onClick={this.onSubmit} className="font-weight-bold">{'Save'}</MDBBtn>
+            <MDBBtn
+              color="indigo"
+              onClick={this.closeModal}
+              className="font-weight-bold"
+            >
+              {"Cancel"}
+            </MDBBtn>
+            <MDBBtn
+              color="default"
+              onClick={this.onSubmit}
+              className="font-weight-bold"
+            >
+              {"Save"}
+            </MDBBtn>
           </MDBModalFooter>
         </MDBModal>
       </>
