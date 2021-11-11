@@ -91,7 +91,7 @@ class AddExpenseModal extends Component {
     this.setState({
       id: "",
       project_id: "",
-      category_id: "",
+      category_id: 2,
       name: "",
       description: "",
       amount: "",
