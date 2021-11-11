@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
+const AuthenticationController = require("./src/controllers/AuthenticationController.js");
 
 // Initialize an variable called app
 const app = express();
@@ -12,92 +13,31 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+require('./src/routes/routes')(app)
+
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "password",
-  database: "ecommerce",
+  database: "project_expenses",
 });
 
-/* To test connection 
-connection.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to MySQL Server!');
-  });
+app.post(
+  "/login",
+  AuthenticationController.login
+);
 
-  app.get("/",(req,res) => {
-    connection.query('SELECT * from category LIMIT 1', (err, rows) => {
-        if(err) throw err;
-        console.log('The data from users table are: \n', rows);
-        connection.end();
-    });
-});*/
 
-app.get("/category", (req, res) => {
-  const sqlSelect = "SELECT * FROM category";
-  connection.query(sqlSelect, (err, result) => {
-    // If no error
-    if (!err) {
-      res.json(result);
-    } else {
-      res.status(400).json({ msg: "No category found" });
-    }
-  });
-});
 
-app.get("/category/:id", (req, res) => {
-  const sqlSelect = `SELECT * FROM product WHERE qty > 0 AND category_id = ${req.params.id}`;
-  connection.query(sqlSelect, (err, result) => {
-    // If no error
-    if (!err) {
-      res.json(result);
-    } else {
-      res.status(400).json({ msg: "No product found" });
-    }
-  });
-});
 
-app.get("/product/detail/:id", (req, res) => {
-  const sqlSelect = `SELECT * FROM product WHERE qty > 0 AND id = ${parseInt(
-    req.params.id
-  )}`;
-  connection.query(sqlSelect, (err, result) => {
-    // If no error
-    if (!err) {
-      res.json(result);
-    } else {
-      res.status(400).json({ msg: "No product detail found" });
-    }
-  });
-});
 
-app.get("/product/category/:id", (req, res) => {
-  const sqlSelect = `SELECT * FROM product where qty > 0 AND category_id = ${parseInt(
-    req.params.id
-  )}`;
-  connection.query(sqlSelect, (err, result) => {
-    // If no error
-    if (!err) {
-      res.json(result);
-    } else {
-      res.status(400).json({ msg: "No product found" });
-    }
-  });
-});
 
-app.post("/login", (req, res) => {
-  const username = `${req.body.username}`;
-  const password = `${req.body.password}`;
-  const sqlSelect = `SELECT id FROM Customer where username = ? and password = ?`;
-  connection.query(sqlSelect, [username, password], (err, result) => {
-    // If no error
-    if (!err) {
-      res.json(result);
-    } else {
-      res.status(400).json({ msg: "No customer found" });
-    }
-  });
-});
+
+
+
+
+
+
 
 // Create order
 app.post("/addToCart", (req, res) => {
