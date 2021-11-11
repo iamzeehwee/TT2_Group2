@@ -16,6 +16,8 @@ module.exports = (app) => {
 
   app.put("/expense/update/:id", ExpensesController.updateExpenses); // Pass in expense Id
 
+  app.delete("/expense/:id", ExpensesController.deleteExpense); 
+
   app.get("/category", CategoryController.getCategory);
 
   app.post("/project", ProjectController.addProject);
