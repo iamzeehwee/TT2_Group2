@@ -22,10 +22,7 @@ class EditExpenseModal extends Component {
       name: "",
       description: "",
       amount: "",
-      created_at: "",
       created_by: "",
-      updated_at: "",
-      updated_by: "",
       error: "",
     };
 
@@ -43,36 +40,35 @@ class EditExpenseModal extends Component {
     let info = this.state;
     let obj = {};
 
-    // if (info.name === "" || info.description === "" || info.amount === "") {
-    //   // incomplete fields
-    //   this.setState({ error: "Please fill in all mandatory fields." });
-    //   return;
-    // }
-    // axios
-    //   .post("student/user/updateProfile", {
-    //     // update user name
-    //     account: info.account,
-    //     name: info.name,
-    //     classId: this.props.user.class_id,
-    //     initialAccount: info.initialAccount,
-    //     email: info.email,
-    //     nativeLanguage: info.nativeLanguage,
-    //     date: info.date,
-    //   })
-    //   .then((res) => {
-    //     if (res.data.success) {
-    //       obj.success = true;
-    //       obj.message = res.data.msg;
-    //       obj.loggedOut = res.data.loggedOut;
-    //       this.closeModal();
-    //       this.props.submit(obj);
-    //     } else {
-    //       this.setState({ error: res.data.error });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    if (info.name === "" || info.description === "" || info.amount === "") {
+      // incomplete fields
+      this.setState({ error: "Please fill in all mandatory fields." });
+      return;
+    }
+    axios
+      .post("localhost:5000/updateexp", {
+        // update user name
+        name: info.name,
+        description: info.description,
+        amount: info.amount,
+        id: this.props.expense.id,
+        project_id: this.props.expense.project_id,
+        created_by: this.props.user.name,
+      })
+      .then((res) => {
+        if (res.data.success) {
+          obj.success = true;
+          obj.message = res.data.msg;
+          obj.loggedOut = res.data.loggedOut;
+          this.closeModal();
+          this.props.submit(obj);
+        } else {
+          this.setState({ error: res.data.error });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   closeModal = () => {
@@ -82,6 +78,8 @@ class EditExpenseModal extends Component {
 
   showModal = () => {
     let user = this.props.user;
+    let expense = this.props.expense;
+    let project = this.props.project;
     let selectedOptions = [];
     let options = [];
     if (this.props.admin) {
@@ -97,25 +95,26 @@ class EditExpenseModal extends Component {
       }
     }
     this.setState({
-      id: user.id,
-      project_id: user.project_id,
-      category_id: user.category_id,
-      name: user.initialAccount,
-      description: user.description,
-      amount: user.amount,
-      created_at: user.created_at,
-      created_by: user.created_by,
-      updated_at: user.updated_at,
-      updated_by: user.updated_by,
+      id: expense.id,
+      project_id: expense.project_id,
+      category_id: expense.category_id,
+      name: expense.name,
+      description: expense.description,
+      amount: expense.amount,
+      created_by: user.name,
+      error: "",
     });
   };
 
   clearStates = () => {
     this.setState({
-      selectedClasses: [],
-      initialName: "",
+      id: "",
+      project_id: "",
+      category_id: "",
+      name: "",
       description: "",
       amount: "",
+      created_by: "",
       error: "",
     });
   };
@@ -186,7 +185,7 @@ class EditExpenseModal extends Component {
 
                 <MDBRow className="mt-3">
                   <MDBCol md="2" style={styles.label}>
-                    <label>Email</label>
+                    <label>Amount</label>
                     <label className="red-text">*</label>
                   </MDBCol>
                   <MDBCol md="10">
