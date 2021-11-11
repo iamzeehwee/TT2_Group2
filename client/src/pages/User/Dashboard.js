@@ -2,6 +2,7 @@ import { MDBBtn, MDBIcon, MDBDataTable, MDBCardImage, MDBCardTitle, MDBCol, MDBC
 import React from "react";
 import DashboardSideNav from "../../components/DashboardSideNav";
 import ConfirmModal from "../../components/ConfirmModal";
+import AddExpenseModal from "../../components/AddExpenseModal";
 import axios from '../../axios';
 import EditExpenseModal from "../../components/EditExpenseModal";
 
@@ -313,6 +314,7 @@ class Dashboard extends React.Component {
           </MDBCol>
           </MDBRow>
             {this.displayExpenses()}
+            
           </div>
         </MDBContainer>
         <EditExpenseModal user={this.state.user} expense={this.state.selectedExpense} project={this.state.project} submit={this.submit} modal={this.state.editModal} toggleModal={this.toggleEditModal}></EditExpenseModal>
