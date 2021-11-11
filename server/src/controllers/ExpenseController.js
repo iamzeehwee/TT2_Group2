@@ -51,5 +51,19 @@ module.exports = {
         res.status(400).json({ msg: `Error when inserting expense to ${project_id}` });
       }
     });
+  },
+
+  async getExpenseByProjectId (req, res) {
+
+    const projectId = `${req.body.projectId}`;
+    const sqlSelectExpenseByProject = `SELECT * FROM EXPENSE E LEFT JOIN PROJECT P ON E.PROJECT_ID = P.ID WHERE P.ID = ${req.params.id}`;
+    connection.query(sqlSelectExpenseByProject, [projectId], (err, result) => {
+      // If no error
+      if (!err) {
+        res.json(result);
+      } else {
+        res.status(400).json({ msg: `Error when inserting expense to ${project_id}` });
+      }
+    });
   }
 };

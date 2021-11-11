@@ -33,8 +33,8 @@ module.exports = {
   },
 
   async getProjectBasedOnUser (req, res) {
-    const sqlSelectCategory = `SELECT * FROM PROJECT WHERE user_id = ${req.params.id}`;
-    connection.query(sqlSelectCategory, (err, result) => {
+    const sqlSelectProject = `SELECT * FROM PROJECT WHERE user_id = ${req.params.id}`;
+    connection.query(sqlSelectProject, (err, result) => {
       // If no error
       if (!err) {
         res.json(result);
