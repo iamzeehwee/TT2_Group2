@@ -4,6 +4,7 @@ import DashboardSideNav from "../../components/DashboardSideNav";
 import ConfirmModal from "../../components/ConfirmModal";
 import AddExpenseModal from "../../components/AddExpenseModal";
 import axios from '../../axios';
+import EditExpenseModal from "../../components/EditExpenseModal";
 
 const sideNavWidth = 240;
 const deleteProjectConfirmationMessage = "Are you sure you want to delete this project? This process cannot be undone.";
@@ -217,6 +218,10 @@ class Dashboard extends React.Component {
     //   })
   }
 
+  submit = () => {
+
+  }
+
   render() {
     const styles = {
       page: {
@@ -298,7 +303,7 @@ class Dashboard extends React.Component {
             
           </div>
         </MDBContainer>
-
+        <EditExpenseModal user={this.state.user} expense={this.state.selectedExpense} project={this.state.project} submit={this.submit} modal={this.state.editModal} toggleModal={this.toggleEditModal}></EditExpenseModal>
         <ConfirmModal message={deleteProjectConfirmationMessage} submit={this.deleteProject} modal={this.state.confirmationModal} toggleModal={this.toggleConfirmationModal}></ConfirmModal>
         
       </>
