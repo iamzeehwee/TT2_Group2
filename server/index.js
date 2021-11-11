@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
+const AuthenticationController = require("./src/controllers/AuthenticationController.js");
 
 // Initialize an variable called app
 const app = express();
@@ -12,30 +13,24 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+require('./src/routes/routes')(app)
+
 const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "password",
-  database: "ecommerce",
+  database: "project_expenses",
 });
 
-/* To test connection 
-connection.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to MySQL Server!');
-  });
+app.post(
+  "/login",
+  AuthenticationController.login
+);
 
-  app.get("/",(req,res) => {
-    connection.query('SELECT * from category LIMIT 1', (err, rows) => {
-        if(err) throw err;
-        console.log('The data from users table are: \n', rows);
-        connection.end();
-    });
-});*/
-
-app.get("/category", (req, res) => {
-  const sqlSelect = "SELECT * FROM category";
-  connection.query(sqlSelect, (err, result) => {
+// SELECT ALL CATEGORY  (TODO: FIX ROUTE)
+app.get("/catergory", (req, res) => {
+  const sqlSelectCategory = `SELECT * FROM CATEGORY`;
+  connection.query(sqlSelectCategory, (err, result) => {
     // If no error
     if (!err) {
       res.json(result);
@@ -45,140 +40,52 @@ app.get("/category", (req, res) => {
   });
 });
 
-app.get("/category/:id", (req, res) => {
-  const sqlSelect = `SELECT * FROM product WHERE qty > 0 AND category_id = ${req.params.id}`;
-  connection.query(sqlSelect, (err, result) => {
+// == SELECT ALL PROJECTS CREATED BY A USER  (TESTED VIA POSTMAN) ==
+app.get("/project/:id", (req, res) => {
+  const sqlSelectProjectsByUser = `SELECT * FROM PROJECT WHERE user_id = ${req.params.id}`;
+  connection.query(sqlSelectProjectsByUser, (err, result) => {
     // If no error
     if (!err) {
       res.json(result);
     } else {
-      res.status(400).json({ msg: "No product found" });
+      res.status(400).json({ msg: "No projects found" });
     }
   });
 });
 
-app.get("/product/detail/:id", (req, res) => {
-  const sqlSelect = `SELECT * FROM product WHERE qty > 0 AND id = ${parseInt(
-    req.params.id
-  )}`;
-  connection.query(sqlSelect, (err, result) => {
+// == ADD EXPENSE TO A PROJECT  (TODO: FIX ROUTE) ==
+app.post("/expense/add", (req, res) => {
+  const projectId = `${req.body.projectId}`;
+  const categoryId = `${req.body.categoryId}`;
+  const name = `${req.body.name}`;
+  const description = `${req.body.description}`;
+  const amount = `${req.body.amount}`;
+  const createdBy = `${req.body.createdBy}`;
+  const updatedBy = `${req.body.updatedBy}`;
+  const sqlInsertExpense = `INSERT INTO EXPENSE(project_id, category_id, name, description, amount, created_at, created_by, updated_at, updated_by) VALUES(?, ?, ?, ?, ?, NOW(), ?, NOW(), ?)`;
+  connection.query(sqlInsertExpense, [projectId, categoryId, name, description, amount, createdBy, updatedBy], (err, result) => {
     // If no error
     if (!err) {
       res.json(result);
     } else {
-      res.status(400).json({ msg: "No product detail found" });
+      res.status(400).json({ msg: `Error when inserting expense to ${project_id}` });
     }
   });
 });
 
-app.get("/product/category/:id", (req, res) => {
-  const sqlSelect = `SELECT * FROM product where qty > 0 AND category_id = ${parseInt(
-    req.params.id
-  )}`;
-  connection.query(sqlSelect, (err, result) => {
+// == RETURN A LIST OF EXPENSE FOR A PROJECT (TODO: FIX ROUTE) ==
+app.get("/project/:id", (req, res) => {
+  const sqlSelectProjectsByUser = `SELECT * FROM PROJECT WHERE user_id = ${req.params.id}`;
+  connection.query(sqlSelectProjectsByUser, (err, result) => {
     // If no error
     if (!err) {
       res.json(result);
     } else {
-      res.status(400).json({ msg: "No product found" });
+      res.status(400).json({ msg: "No projects found" });
     }
   });
 });
 
-app.post("/login", (req, res) => {
-  const username = `${req.body.username}`;
-  const password = `${req.body.password}`;
-  const sqlSelect = `SELECT id FROM Customer where username = ? and password = ?`;
-  connection.query(sqlSelect, [username, password], (err, result) => {
-    // If no error
-    if (!err) {
-      res.json(result);
-    } else {
-      res.status(400).json({ msg: "No customer found" });
-    }
-  });
-});
-
-// Create order
-app.post("/addToCart", (req, res) => {
-  const customerId = `${req.body.userId}`;
-  const productId = `${req.body.productId}`;
-  const status = "PENDING";
-
-  const sqlSelect = `SELECT * FROM product where id = ? `;
-  connection.query(sqlSelect, [productId], (err, result) => {
-    if (!err) {
-      let productQty = result[0].qty;
-      let productUnitPrice = result[0].price;
-
-      // Check if product already exist in cart. If yes, increment
-      const sqlSelect = `SELECT * FROM orders where customer_id = ? and product_id = ? and status = 'PENDING' `;
-      connection.query(sqlSelect, [customerId, productId], (err, result) => {
-        // If no error
-        if (!err) {
-          let cartQty;
-          const existingCartData = result;
-
-          if (existingCartData.length > 0) {
-            // if exist, update cart
-            let orderId = existingCartData[0].order_id;
-            cartQty = existingCartData[0].qty + 1;
-
-            if (cartQty <= productQty) {
-                const sqlSelect = `UPDATE orders SET qty = ? WHERE order_id = ?`;
-                connection.query(sqlSelect, [cartQty, orderId], (err, result) => {
-                // If no error
-                if (!err) {
-                    res.status(200).json({ msg: "Update cart qty" });
-                } else {
-                    res.status(400).json({ msg: "Error when updating cart" });
-                }
-                });
-            }
-            else {
-                res.status(400).json({ msg: "Insufficent quantity" });
-            }
-          } else {
-            cartQty = 1;
-            const sqlSelect = `INSERT INTO orders(customer_id, product_id, qty, unit_price, status, created_date) VALUES (?, ?, ?, ?, ?, NOW())`;
-            connection.query(
-              sqlSelect,
-              [customerId, productId, cartQty, productUnitPrice, status],
-              (err, result) => {
-                // If no error
-                if (!err) {
-                    res.status(200).json({ msg: "Added item to cart" });
-                } else {
-                  res.status(400).json({ msg: "Error when adding to cart" });
-                }
-              }
-            );
-          }
-        } else {
-          res.status(400).json({ msg: "Error when retrieving cart" });
-        }
-      });
-    } else {
-      res
-        .status(400)
-        .json({ msg: "Unable to add to cart due to product not found" });
-    }
-  });
-});
-
-app.get("/cart/:id", (req, res) => {
-  const sqlSelect = `SELECT o.order_id, o.customer_id, o.product_id, o.qty, o.unit_price, p.title, p.image FROM ORDERS O LEFT JOIN PRODUCT P ON O.PRODUCT_ID = P.ID WHERE STATUS = 'PENDING' AND CUSTOMER_ID = ${parseInt(
-    req.params.id
-  )}`;
-  connection.query(sqlSelect, (err, result) => {
-    // If no error
-    if (!err) {
-      res.json(result);
-    } else {
-      res.status(400).json({ msg: "No item found in shopping cart" });
-    }
-  });
-});
 
 // Such config info should be stored in another config file.
 // process.env.PORT is used because when we deploy, the server may not be using 5000
