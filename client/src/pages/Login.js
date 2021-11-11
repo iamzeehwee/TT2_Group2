@@ -39,10 +39,9 @@ class Login extends Component {
       .then(res => {
         console.log(res.data);
         if (res.data[0].id) {
-          console.log('login successful')
-          // this.props.login('loginUser')
-          this.props.history.push(`/dashboard`)
           localStorage.setItem("userId", res.data[0].id)
+          localStorage.setItem("isLoggedIn", true)
+          this.props.history.push(`/dashboard`)
         } else {
           this.setState({ error: res.data.msg })
         }

@@ -74,13 +74,26 @@ class Dashboard extends React.Component {
       selectedProject: projectsTest[1],
       selectedExpense: {},
       selectedProjectIndex: 2,
-      projects: projectsTest,
+      projects: [],
       expenses: expensesTest,
       name: '',
       addModal: '',
       editModal: false,
       successFailModal: false,
     }
+  }
+
+  componentDidMount = () => {
+    let id = localStorage.getItem("userId");
+    axios.get(`/project/${id}`).then(res => {
+      let info = res.data;
+      console.log(info);
+      this.setState({
+        projects: info,
+      })
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
   toggleEditModal = () => {
@@ -280,41 +293,41 @@ class Dashboard extends React.Component {
         <DashboardSideNav selectedProjectIndex={this.state.selectedProjectIndex} setIndex={this.setIndex} width={sideNavWidth} projects={this.state.projects}></DashboardSideNav>
         <MDBContainer>
           <div style={styles.page}>
-          <MDBRow className="mt-5 mb-5">
-          <MDBCol sm="12" md="6">
-            <MDBRow start>
-              <MDBCol sm="6" md="4" className="font-weight-bolder"> User:</MDBCol>
-              <MDBCol sm="6" md="6" className="text-left">{this.state.user.name}</MDBCol>
-            </MDBRow>
-          </MDBCol>
-          <MDBCol sm="12" md="6">
-            <MDBRow>
-              <MDBCol sm="6" md="5" className="font-weight-bolder">Appointment:</MDBCol>
-              <MDBCol sm="6" md="5" className="text-left">{this.state.user.appointment}</MDBCol>
-            </MDBRow>
-          </MDBCol>
+            <MDBRow className="mt-5 mb-5">
+              <MDBCol sm="12" md="6">
+                <MDBRow start>
+                  <MDBCol sm="6" md="4" className="font-weight-bolder"> User:</MDBCol>
+                  <MDBCol sm="6" md="6" className="text-left">{this.state.user.name}</MDBCol>
+                </MDBRow>
+              </MDBCol>
+              <MDBCol sm="12" md="6">
+                <MDBRow>
+                  <MDBCol sm="6" md="5" className="font-weight-bolder">Appointment:</MDBCol>
+                  <MDBCol sm="6" md="5" className="text-left">{this.state.user.appointment}</MDBCol>
+                </MDBRow>
+              </MDBCol>
 
-          <MDBCol md="3"><h3 className="text-left my-1 mt-5 font-weight-bolder">{"Project Name:"}</h3></MDBCol>
-          <MDBCol md="6"><h3 className="text-left my-1 mt-5 font-weight-bolder">{this.state.selectedProject.name}</h3></MDBCol>
+              <MDBCol md="3"><h3 className="text-left my-1 mt-5 font-weight-bolder">{"Project Name:"}</h3></MDBCol>
+              <MDBCol md="6"><h3 className="text-left my-1 mt-5 font-weight-bolder">{this.state.selectedProject.name}</h3></MDBCol>
 
-          <MDBCol sm="12" md="6">
-            <MDBRow className="mt-2">
-              <MDBCol sm="6" md="4" className="font-weight-bolder">Budget:</MDBCol>
-              <MDBCol sm="6" md="5" className="text-left">{this.state.selectedProject.budget}</MDBCol>
+              <MDBCol sm="12" md="6">
+                <MDBRow className="mt-2">
+                  <MDBCol sm="6" md="4" className="font-weight-bolder">Budget:</MDBCol>
+                  <MDBCol sm="6" md="5" className="text-left">{this.state.selectedProject.budget}</MDBCol>
+                </MDBRow>
+              </MDBCol>
             </MDBRow>
-          </MDBCol>
-        </MDBRow>
 
-        <MDBRow className="text-right">
-        <MDBCol>
-            <MDBBtn onClick={this.toggleAddModal} color="indigo">
-              <MDBIcon icon="plus" className="mr-2" />
-              Expense
-            </MDBBtn>
-          </MDBCol>
-          </MDBRow>
+            <MDBRow className="text-right">
+              <MDBCol>
+                <MDBBtn onClick={this.toggleAddModal} color="indigo">
+                  <MDBIcon icon="plus" className="mr-2" />
+                  Expense
+                </MDBBtn>
+              </MDBCol>
+            </MDBRow>
             {this.displayExpenses()}
-            
+
           </div>
         </MDBContainer>
         <EditExpenseModal user={this.state.user} expense={this.state.selectedExpense} project={this.state.project} submit={this.submit} modal={this.state.editModal} toggleModal={this.toggleEditModal}></EditExpenseModal>
