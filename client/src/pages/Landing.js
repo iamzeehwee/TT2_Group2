@@ -53,7 +53,7 @@ class Landing extends React.Component {
                     A powerful tool to handle your budget and track your expenses
                   </h6>
                   <h6 className='mb-4'>
-                    Integrated with <b className="font-weight-bold">Test</b>
+                    Integrated with <b className="font-weight-bold">Project Expense Tracker</b>
                   </h6>
                   {this.loginBtn()}
                 </MDBAnimation>
