@@ -46,14 +46,15 @@ class AddExpenseModal extends Component {
     }
 
     axios
-      .post("backendapi/add", {
+      .post("localhost:5000/expense/add", {
         // add expense
-        user_id: info.user_id,
-        project_id: info.project_id,
-        category_id: info.category_id,
+        project_id: this.props.expense.project_id,
+        categoryID: 2,
         name: info.name,
         description: info.description,
         amount: info.amount,
+        createdBy: this.props.user.name,
+        updatedBy: this.props.user.name,
       })
       .then((res) => {
         if (res.data.success) {
@@ -132,22 +133,7 @@ class AddExpenseModal extends Component {
           <MDBModalBody>
             <MDBContainer>
               <form>
-              <MDBRow className="mt-3">
-                  <MDBCol md="2" style={styles.label}>
-                    <label>User ID:</label>
-                    <label className="red-text">*</label>
-                  </MDBCol>
-                  <MDBCol md="10">
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="name"
-                      placeholder="Enter User ID"
-                      value={this.state.user_id}
-                      onChange={this.onChange}
-                    />
-                  </MDBCol>
-                </MDBRow>
+             
                 <MDBRow className="mt-3">
                   <MDBCol md="2" style={styles.label}>
                     <label>Expense name:</label>
