@@ -4,22 +4,17 @@ import { withRouter } from 'react-router-dom';
 import axios from '../axios';
 
 class NavBar extends Component {
+  componentDidMount = () => {
+
+  }
+
   goToLogin = () => {
     this.props.history.push(`/login`)
   }
 
   logout = () => {
-    axios.post('/student/auth/logout').then(response => {
-      console.log(response.data)
-      if (response.status === 200) {
-        this.props.logout();
-        this.props.history.push(`/`)
-        localStorage.removeItem("userId");
-        localStorage.removeItem("isLoggedIn");
-      }
-    }).catch(error => {
-      console.log('Logout error')
-    })
+    localStorage.removeItem("userId");
+    localStorage.removeItem("isLoggedIn");
   }
 
   render() {
@@ -37,11 +32,11 @@ class NavBar extends Component {
                 </MDBNavLink>
               </MDBNavItem>
               <MDBNavItem>
-                <MDBNavLink to='/profile'>
+                {/* <MDBNavLink to='/profile'>
                   <MDBIcon icon="user" size="lg" className="mx-2" />
                 </MDBNavLink>
               </MDBNavItem>
-              <MDBNavItem>
+              <MDBNavItem> */}
                 <MDBNavLink onClick={() => this.logout()} to="/">
                   <MDBIcon icon="sign-out-alt" size="lg" className="mx-2" />
                 </MDBNavLink>
