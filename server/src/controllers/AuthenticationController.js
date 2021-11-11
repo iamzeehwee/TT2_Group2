@@ -54,4 +54,20 @@ module.exports = {
       }
     });
   },
+
+  async getUserInfo(req, res) {
+    const userId = `${req.body.userId}`;
+    const sqlSelect = `SELECT * FROM user where id = ? `;
+    connection.query(sqlSelect, [userId], (err, result) => {
+      // If no error
+      if (!err && result.length > 0) {
+        console.log("RESULT IS ", result.length > 0);
+        res.status(200).json(result);
+      } else if (!err && result.length == 0) {
+        res.status(403).json({msg: "Invalid log in details"});
+      } else {
+        res.status(400).json({ msg: "No user found" });
+      }
+    });
+  },
 };
