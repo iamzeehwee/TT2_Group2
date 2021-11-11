@@ -8,6 +8,8 @@ module.exports = (app) => {
 
   app.post("/register", AuthenticationController.register);
 
+  app.get("/user/:id", AuthenticationController.getUserInfo);
+
   // app.put("/expense/update", ExpensesController.updateExpenses);
 
   app.post("/expense/add", ExpensesController.addExpenses);
