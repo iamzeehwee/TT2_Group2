@@ -73,7 +73,7 @@ const UserContextProvider = props => {
       value={{
         ...state,
         login: (role) =>
-          dispatch({ type: 'loginUser', payload: { authenticated: true, role: role} }),
+          dispatch({ type: 'loginUser', payload: { authenticated: true} }),
         logout: () =>
           dispatch({ type: 'logoutUser', payload: { authenticated: false } })
       }}
