@@ -8,12 +8,16 @@ class EditUserModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      initialAccount: '',
-      account: '',
+      id : '',
+      project_id : '',
+      category_id : '',
       name: '',
-      email: '',
-      nativeLanguage: '',
-      date: '',
+      description: '',
+      amount: '',
+      created_at: '',
+      created_by: '',
+      updated_at: '',
+      updated_by: '',
       error: ''
     }
 
@@ -31,7 +35,7 @@ class EditUserModal extends Component {
     let info = this.state;
     let obj = {};
 
-    if (info.name === '' || info.account === '' || info.email === '') { // incomplete fields
+    if (info.name === '' || info.description === '' || info.amount === '') { // incomplete fields
       this.setState({ error: "Please fill in all mandatory fields." })
       return
     }
@@ -288,23 +292,6 @@ class EditUserModal extends Component {
               <form>
                 <MDBRow className="mt-3">
                   <MDBCol md="2" style={styles.label}>
-                    <label>Account</label>
-                    <label className="red-text">*</label>
-                  </MDBCol>
-                  <MDBCol md="10">
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="account"
-                      placeholder="Enter Account"
-                      value={this.state.account}
-                      onChange={this.onChange}
-                    />
-                  </MDBCol>
-                </MDBRow>
-
-                <MDBRow className="mt-3">
-                  <MDBCol md="2" style={styles.label}>
                     <label>Name</label>
                     <label className="red-text">*</label>
                   </MDBCol>
@@ -322,6 +309,23 @@ class EditUserModal extends Component {
 
                 <MDBRow className="mt-3">
                   <MDBCol md="2" style={styles.label}>
+                    <label>Description</label>
+                    <label className="red-text">*</label>
+                  </MDBCol>
+                  <MDBCol md="10">
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="description"
+                      placeholder="Enter Description"
+                      value={this.state.description}
+                      onChange={this.onChange}
+                    />
+                  </MDBCol>
+                </MDBRow>
+
+                <MDBRow className="mt-3">
+                  <MDBCol md="2" style={styles.label}>
                     <label>Email</label>
                     <label className="red-text">*</label>
                   </MDBCol>
@@ -329,9 +333,9 @@ class EditUserModal extends Component {
                     <input
                       type="text"
                       className="form-control"
-                      name="email"
-                      placeholder="Enter Email"
-                      value={this.state.email}
+                      name="amount"
+                      placeholder="Enter Amount"
+                      value={this.state.amount}
                       onChange={this.onChange}
                     />
                   </MDBCol>
