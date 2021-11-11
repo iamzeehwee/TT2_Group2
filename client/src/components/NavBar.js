@@ -24,7 +24,7 @@ class NavBar extends Component {
     return (
       // IMPORTANT! So that modal will show above navbar (zIndex)
       <MDBNavbar color='indigo' dark expand='xs' fixed='top' scrolling style={{ zIndex: '10' }}>
-        <MDBNavbarBrand href='/' className='font-weight-bold'>Test</MDBNavbarBrand>
+        <MDBNavbarBrand href='/' className='font-weight-bold'>Project Expense Tracker</MDBNavbarBrand>
         <MDBNavbarNav right>
           {/* Show different navBar details depending on user logged in or not */}
           {this.props.auth ?

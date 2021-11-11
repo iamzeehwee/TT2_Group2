@@ -4,6 +4,7 @@ import DashboardSideNav from "../../components/DashboardSideNav";
 import ConfirmModal from "../../components/ConfirmModal";
 import axios from '../../axios';
 
+const sideNavWidth = 240;
 const deleteProjectConfirmationMessage = "Are you sure you want to delete this project? This process cannot be undone.";
 const projectsTest = [
   {
@@ -63,7 +64,7 @@ class Dashboard extends React.Component {
     this.state = {
       selectedProject: {},
       selectedExpense: {},
-      selectedIndex: 0,
+      selectedProjectIndex: 2,
       projects: projectsTest,
       expenses: expensesTest,
       name:'',
@@ -96,8 +97,8 @@ class Dashboard extends React.Component {
           sort: 'asc',
         },
         {
-          label: 'Budget',
-          field: 'budget',
+          label: 'Amount',
+          field: 'amount',
           sort: 'asc'
         },
         {
@@ -132,14 +133,18 @@ class Dashboard extends React.Component {
   };
 
   getExpenseRows = () => {
-    var list = this.state.expenses;
-    console.log(list);
+    var list = [];
+    for (let exp of this.state.expenses) {
+      if (exp.project_id === this.state.selectedProjectIndex) {
+        list.push(exp);
+      }
+    }
     var newList = []
     list && list.forEach((exp, index) => {
       var obj = {
         title: exp.name,
         description: exp.description,
-        budget: exp.amount,
+        amount: exp.amount,
         options: this.showActions(exp),
         // clickEvent: () => {
         //     this.setState({
@@ -153,6 +158,10 @@ class Dashboard extends React.Component {
     })
 
     return newList;
+  }
+
+  setIndex = (index) => {
+    this.setState({ selectedProjectIndex: index})
   }
 
 showActions = (exp) => {
@@ -196,13 +205,11 @@ showActions = (exp) => {
     //   })
   }
 
-  drawerWidth = 240;
-
   render() {
     const styles = {
       page: {
         paddingTop: '80px',
-        marginLeft: 60,
+        marginLeft: sideNavWidth,
       },
       cardNav: {
         color: 'black'
@@ -245,7 +252,7 @@ showActions = (exp) => {
           </MDBContainer>
           <hr className="mt-0 mb-0" />
         </div>
-        <DashboardSideNav></DashboardSideNav>
+        <DashboardSideNav selectedProjectIndex={this.state.selectedProjectIndex} setIndex={this.setIndex} width={sideNavWidth} projects={this.state.projects}></DashboardSideNav>
 
         <MDBContainer>
           <div style={styles.page}>

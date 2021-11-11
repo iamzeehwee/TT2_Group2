@@ -1,6 +1,7 @@
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import React, { Component } from 'react';
 import Constants from '../Constants';
 
@@ -14,7 +15,7 @@ class DashboardSideNav extends Component {
       sideNav: {
         top: 0,
         height: '100%',
-        width: this.props.drawerWidth,
+        width: this.props.width,
         borderRight: '1px solid rgba(0, 0, 0, 0.12)',
         position: 'fixed',
         overflowY: 'auto',
@@ -30,22 +31,21 @@ class DashboardSideNav extends Component {
       <>
         <div style={styles.sideNav}>
           <div style={styles.navBar} />
-          <List component="nav">
-            <ListItem
-              button
-              selected={this.props.selectedIndex === 0}
-              onClick={() => this.handleListItemClick(0)}
-            >
-              <ListItemText primary={'Project 1'} />
-            </ListItem>
-            <ListItem
-              button
-              selected={this.props.selectedIndex === 1}
-              onClick={() => this.handleListItemClick(1)}
-            >
-              <ListItemText primary={'Project 2'} />
-            </ListItem>
-          </List>
+          <ListSubheader>
+              {'Projects'}
+            </ListSubheader>
+          {this.props.projects.map((proj, index) =>
+          <React.Fragment key={index}>
+              <ListItem
+                button
+                key={proj.id}
+                selected={this.props.selectedProjectIndex === proj.id}
+                onClick={() => this.handleListItemClick(proj.id)}
+              >
+                <ListItemText primary={proj.name} />
+              </ListItem>
+          </React.Fragment>
+        )}
         </div>
       </>
     );
