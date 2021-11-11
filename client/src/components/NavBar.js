@@ -14,6 +14,8 @@ class NavBar extends Component {
       if (response.status === 200) {
         this.props.logout();
         this.props.history.push(`/`)
+        localStorage.removeItem("userId");
+        localStorage.removeItem("isLoggedIn");
       }
     }).catch(error => {
       console.log('Logout error')
@@ -27,7 +29,7 @@ class NavBar extends Component {
         <MDBNavbarBrand href='/' className='font-weight-bold'>Project Expense Tracker</MDBNavbarBrand>
         <MDBNavbarNav right>
           {/* Show different navBar details depending on user logged in or not */}
-          {this.props.auth ?
+          {localStorage.getItem("isLoggedIn") ?
             <>
               <MDBNavItem>
                 <MDBNavLink to='/dashboard'>

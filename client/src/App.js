@@ -44,28 +44,9 @@ const reducer = (state, action) => {
 const UserContextProvider = props => {
   const [state, dispatch] = React.useReducer(reducer, initialState.user);
   if (!state.getAuth) {
-    axios.get('/student/auth').then(res => {
-      // received server data, user logged in but state not set yet
-      if (res.data.user && !state.isAuthenticated) {
-        dispatch({
-          type: 'loginUser',
-          payload: {
-            authenticated: true,
-            getAuth: true,
-          }
-        });
-      } else if (!state.getAuth) { // received server data, user not logged in 
-        dispatch({
-          type: 'getUser',
-          payload: {
-            getAuth: true
-          }
-        });
-      }
-      return null
-    }).catch(error => {
-      console.log(error)
-    })
+    state.getAuth = true;
+    console.log("SETTING IF USEER LOGIN")
+    localStorage.setItem("isLoggedIn", true);
   }
 
   return (
