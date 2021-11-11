@@ -46,14 +46,15 @@ class EditExpenseModal extends Component {
       return;
     }
     axios
-      .post("localhost:5000/updateexp", {
+      .put(`localhost:5000/update/${this.props.expense.id}`, {
         // update user name
+        project_id: this.props.expense.project_id,
+        categoryID: 2,
         name: info.name,
         description: info.description,
         amount: info.amount,
-        id: this.props.expense.id,
-        project_id: this.props.expense.project_id,
-        created_by: this.props.user.name,
+        createdBy: this.props.user.name,
+        updatedBy: this.props.user.name,
       })
       .then((res) => {
         if (res.data.success) {
