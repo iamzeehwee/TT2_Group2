@@ -8,73 +8,80 @@ const sideNavWidth = 240;
 const deleteProjectConfirmationMessage = "Are you sure you want to delete this project? This process cannot be undone.";
 const projectsTest = [
   {
-      "id": 1,
-      "user_id": 4,
-      "name": "RTF",
-      "budget": 12000,
-      "description": "Realtime Face Recogniton"
+    "id": 1,
+    "user_id": 4,
+    "name": "RTF",
+    "budget": 12000,
+    "description": "Realtime Face Recogniton"
   },
   {
-      "id": 2,
-      "user_id": 1,
-      "name": "SWT",
-      "budget": 80000,
-      "description": "Smart Watch Tracker"
+    "id": 2,
+    "user_id": 1,
+    "name": "SWT",
+    "budget": 80000,
+    "description": "Smart Watch Tracker"
   },
   {
-      "id": 3,
-      "user_id": 2,
-      "name": "ULS",
-      "budget": 11000,
-      "description": "Upgrade Legacy System"
+    "id": 3,
+    "user_id": 2,
+    "name": "ULS",
+    "budget": 11000,
+    "description": "Upgrade Legacy System"
   }
 ];
 
 const expensesTest = [
   {
-      "id": 1,
-      "project_id": 2,
-      "category_id": 2,
-      "name": "Server Maintenance",
-      "description": "Server maintenance and upgrading work to incorporate BC plans",
-      "amount": 30000,
-      "created_at": "2021-11-04T16:00:00.000Z",
-      "created_by": "Jacky",
-      "updated_at": "2021-11-06T16:00:00.000Z",
-      "updated_by": "Jacky"
+    "id": 1,
+    "project_id": 2,
+    "category_id": 2,
+    "name": "Server Maintenance",
+    "description": "Server maintenance and upgrading work to incorporate BC plans",
+    "amount": 30000,
+    "created_at": "2021-11-04T16:00:00.000Z",
+    "created_by": "Jacky",
+    "updated_at": "2021-11-06T16:00:00.000Z",
+    "updated_by": "Jacky"
   },
   {
-      "id": 2,
-      "project_id": 3,
-      "category_id": 4,
-      "name": "Consultant",
-      "description": "Consultancy services for integration work",
-      "amount": 10000,
-      "created_at": "2021-11-06T16:00:00.000Z",
-      "created_by": "Helen",
-      "updated_at": "2021-11-07T16:00:00.000Z",
-      "updated_by": "Helen"
+    "id": 2,
+    "project_id": 3,
+    "category_id": 4,
+    "name": "Consultant",
+    "description": "Consultancy services for integration work",
+    "amount": 10000,
+    "created_at": "2021-11-06T16:00:00.000Z",
+    "created_by": "Helen",
+    "updated_at": "2021-11-07T16:00:00.000Z",
+    "updated_by": "Helen"
   }
 ];
-
+const userTest = {
+  "id": 1,
+  "username": "user101",
+  "password": "123456",
+  "name": "Jacky",
+  "appointment": "Project Lead"
+};
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedProject: {},
+      user: userTest,
+      selectedProject: projectsTest[1],
       selectedExpense: {},
       selectedProjectIndex: 2,
       projects: projectsTest,
       expenses: expensesTest,
-      name:'',
+      name: '',
       editModal: false,
       successFailModal: false,
     }
   }
 
   toggleEditModal = () => {
-    this.setState({ editModal: !this.state.editModal});
+    this.setState({ editModal: !this.state.editModal });
   }
 
   toggleConfirmationModal = () => {
@@ -106,7 +113,7 @@ class Dashboard extends React.Component {
           field: 'options',
           sort: 'disabled',
           width: 100
-        },,
+        }, ,
       ],
       rows: this.getExpenseRows()
     }
@@ -154,17 +161,21 @@ class Dashboard extends React.Component {
         //   }
         // }
       }
-        newList.push(obj);
+      newList.push(obj);
     })
 
     return newList;
   }
 
   setIndex = (index) => {
-    this.setState({ selectedProjectIndex: index})
+    for (let proj of this.state.projects) {
+      if (proj.id === index) {
+        this.setState({ selectedProjectIndex: index, selectedProject: proj })
+      }
+    }
   }
 
-showActions = (exp) => {
+  showActions = (exp) => {
     return (
       <>
 
@@ -237,6 +248,9 @@ showActions = (exp) => {
         paddingTop: '30px',
         paddingLeft: '30px',
         paddingRight: '30px',
+      },
+      headerText: {
+
       }
     };
 
@@ -253,9 +267,32 @@ showActions = (exp) => {
           <hr className="mt-0 mb-0" />
         </div>
         <DashboardSideNav selectedProjectIndex={this.state.selectedProjectIndex} setIndex={this.setIndex} width={sideNavWidth} projects={this.state.projects}></DashboardSideNav>
-
         <MDBContainer>
           <div style={styles.page}>
+          <MDBRow className="mt-5 mb-5">
+          <MDBCol sm="12" md="6">
+            <MDBRow start>
+              <MDBCol sm="6" md="4" className="font-weight-bolder"> User:</MDBCol>
+              <MDBCol sm="6" md="6" className="text-left">{this.state.user.name}</MDBCol>
+            </MDBRow>
+          </MDBCol>
+          <MDBCol sm="12" md="6">
+            <MDBRow>
+              <MDBCol sm="6" md="5" className="font-weight-bolder">Appointment:</MDBCol>
+              <MDBCol sm="6" md="5" className="text-left">{this.state.user.appointment}</MDBCol>
+            </MDBRow>
+          </MDBCol>
+
+          <MDBCol md="3"><h3 className="text-left my-1 mt-5 font-weight-bolder">{"Project Name:"}</h3></MDBCol>
+          <MDBCol md="6"><h3 className="text-left my-1 mt-5 font-weight-bolder">{this.state.selectedProject.name}</h3></MDBCol>
+
+          <MDBCol sm="12" md="6">
+            <MDBRow className="mt-2">
+              <MDBCol sm="6" md="4" className="font-weight-bolder">Budget:</MDBCol>
+              <MDBCol sm="6" md="5" className="text-left">{this.state.selectedProject.budget}</MDBCol>
+            </MDBRow>
+          </MDBCol>
+        </MDBRow>
             {this.displayExpenses()}
           </div>
         </MDBContainer>
