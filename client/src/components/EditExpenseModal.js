@@ -46,7 +46,7 @@ class EditExpenseModal extends Component {
       return;
     }
     axios
-      .put(`localhost:5000/update/${this.props.expense.id}`, {
+      .put(`localhost:5000/expense/update/${this.props.expense.id}`, {
         // update user name
         project_id: this.props.expense.project_id,
         categoryID: 2,
@@ -58,6 +58,7 @@ class EditExpenseModal extends Component {
       })
       .then((res) => {
         if (res.data.success) {
+          console.log("hi");
           obj.success = true;
           obj.message = res.data.msg;
           obj.loggedOut = res.data.loggedOut;
