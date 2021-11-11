@@ -58,7 +58,6 @@ class EditExpenseModal extends Component {
       })
       .then((res) => {
         if (res.data.success) {
-          console.log("hi");
           obj.success = true;
           obj.message = res.data.msg;
           obj.loggedOut = res.data.loggedOut;
