@@ -8,13 +8,13 @@ module.exports = (app) => {
 
   app.post("/register", AuthenticationController.register);
 
-  app.put("/expense/update", ExpensesController.updateExpenses);
+  // app.put("/expense/update", ExpensesController.updateExpenses);
 
   app.post("/expense/add", ExpensesController.addExpenses);
 
-  app.get("/expense/:id", ExpensesController.getExpenseByProjectId);  // Pass in project Id
+  app.post("/expense/:id", ExpensesController.getExpenseByProjectId);  // Pass in project Id
 
-  app.put("/project/:id", ExpensesController.updateExpenses); // Pass in expense Id
+  app.put("/expense/update/:id", ExpensesController.updateExpenses); // Pass in expense Id
 
   app.get("/category", CategoryController.getCategory);
 
