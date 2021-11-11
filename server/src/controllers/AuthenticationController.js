@@ -56,7 +56,8 @@ module.exports = {
   },
 
   async getUserInfo(req, res) {
-    const userId = `${req.body.userId}`;
+    console.log("REQUEST PARAMS ", req.params)
+    const userId = `${req.params.id}`;
     const sqlSelect = `SELECT * FROM user where id = ? `;
     connection.query(sqlSelect, [userId], (err, result) => {
       // If no error
@@ -64,7 +65,7 @@ module.exports = {
         console.log("RESULT IS ", result.length > 0);
         res.status(200).json(result);
       } else if (!err && result.length == 0) {
-        res.status(403).json({msg: "Invalid log in details"});
+        res.status(403).json({msg: "Invalid User"});
       } else {
         res.status(400).json({ msg: "No user found" });
       }
