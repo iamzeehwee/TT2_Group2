@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import axios from './axios.js';
 import NavBar from './components/NavBar';
-import { setLanguage } from './Constants';
 import Routes from './Routes';
 
 const UserContext = React.createContext();
@@ -20,21 +19,16 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 'loginUser':
       console.log('call login user')
-      setLanguage(action.payload.language);
       return {
         ...state,
-        isAuthenticated: action.payload.authenticated,
+        isAuthenticated: true,
         getAuth: action.payload.getAuth,
-        language: action.payload.language,
-        role: action.payload.role
       };
     case 'logoutUser':
       console.log('call logout user')
-      setLanguage('eng');
       return {
         ...state,
         isAuthenticated: action.payload.authenticated,
-        language: 'eng'
       };
     case 'getUser':
       return {
@@ -52,34 +46,12 @@ const UserContextProvider = props => {
   if (!state.getAuth) {
     axios.get('/student/auth').then(res => {
       // received server data, user logged in but state not set yet
-      if (res.data.user && !state.isAuthenticated && (res.data.user.role === 'student')) {
+      if (res.data.user && !state.isAuthenticated) {
         dispatch({
           type: 'loginUser',
           payload: {
             authenticated: true,
             getAuth: true,
-            language: res.data.user.language,
-            role: 'student'
-          }
-        });
-      } else if(res.data.user && !state.isAuthenticated && (res.data.user.role === 'teacher')) {
-        dispatch({
-          type: 'loginUser',
-          payload: {
-            authenticated: true,
-            getAuth: true,
-            language: res.data.user.language,
-            role: 'teacher'
-          }
-        });
-      } else if(res.data.user && !state.isAuthenticated && (res.data.user.role === 'admin')) {
-        dispatch({
-          type: 'loginUser',
-          payload: {
-            authenticated: true,
-            getAuth: true,
-            language: res.data.user.language,
-            role: 'admin'
           }
         });
       } else if (!state.getAuth) { // received server data, user not logged in 
@@ -119,9 +91,9 @@ const App = () => (
           <div className='flyout'>
             <NavBar logout={user.logout} auth={user.isAuthenticated} />
             <main style={{ marginTop: '4rem' }}>
-              {user.getAuth &&
-                <Routes role={user.role} login={user.login} auth={user.isAuthenticated} />
-              }
+              {/* {user.getAuth && */}
+                <Routes login={true} auth={true} />
+
             </main>
           </div>
         </Router>
