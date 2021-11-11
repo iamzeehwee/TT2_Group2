@@ -6,7 +6,7 @@ import axios from '../../axios';
 import EditExpenseModal from "../../components/EditExpenseModal";
 
 const sideNavWidth = 240;
-const deleteProjectConfirmationMessage = "Are you sure you want to delete this project? This process cannot be undone.";
+const deleteExpenseConfirmationMessage = "Are you sure you want to delete this expense? This process cannot be undone.";
 const projectsTest = [
   {
     "id": 1,
@@ -76,6 +76,7 @@ class Dashboard extends React.Component {
       projects: projectsTest,
       expenses: expensesTest,
       name: '',
+      addModal: '',
       editModal: false,
       successFailModal: false,
     }
@@ -87,6 +88,10 @@ class Dashboard extends React.Component {
 
   toggleConfirmationModal = () => {
     this.setState({ editModal: false, confirmationModal: !this.state.confirmationModal });
+  }
+
+  toggleAddModal = () => {
+    this.setState({ addModal: !this.state.addModal });
   }
 
   scrollToTop = () => window.scrollTo(0, 0);
@@ -298,11 +303,20 @@ class Dashboard extends React.Component {
             </MDBRow>
           </MDBCol>
         </MDBRow>
+
+        <MDBRow className="text-right">
+        <MDBCol>
+            <MDBBtn onClick={this.toggleAddModal} color="indigo">
+              <MDBIcon icon="plus" className="mr-2" />
+              Expense
+            </MDBBtn>
+          </MDBCol>
+          </MDBRow>
             {this.displayExpenses()}
           </div>
         </MDBContainer>
         <EditExpenseModal user={this.state.user} expense={this.state.selectedExpense} project={this.state.project} submit={this.submit} modal={this.state.editModal} toggleModal={this.toggleEditModal}></EditExpenseModal>
-        <ConfirmModal message={deleteProjectConfirmationMessage} submit={this.deleteProject} modal={this.state.confirmationModal} toggleModal={this.toggleConfirmationModal}></ConfirmModal>
+        <ConfirmModal message={deleteExpenseConfirmationMessage} submit={this.deleteProject} modal={this.state.confirmationModal} toggleModal={this.toggleConfirmationModal}></ConfirmModal>
       </>
     );
   }
