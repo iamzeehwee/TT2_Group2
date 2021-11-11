@@ -65,5 +65,18 @@ module.exports = {
         res.status(400).json({ msg: `Error when inserting expense to ${project_id}` });
       }
     });
-  }
+  },
+
+  async deleteExpense (req, res) {
+    const expenseId = `${req.params.id}`;
+    const sqlDelete = `DELETE FROM EXPENSE WHERE id = ${expenseId}`;
+    connection.query(sqlDelete, (err, result) => {
+      // If no error
+      if (!err) {
+        res.status(200).json({ msg: `Deleted Expense successfully` });
+      } else {
+        res.status(400).json({ msg: `Error when deleting expense` });
+      }
+    });
+  },
 };
