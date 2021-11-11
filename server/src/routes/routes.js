@@ -12,7 +12,7 @@ module.exports = (app) => {
 
   app.post("/expense/add", ExpensesController.addExpenses);
 
-  app.post("/expense/:id", ExpensesController.getExpenseByProjectId);  // Pass in project Id
+  app.get("/expense/:id", ExpensesController.getExpenseByProjectId);  // Pass in project Id
 
   app.put("/expense/update/:id", ExpensesController.updateExpenses); // Pass in expense Id
 
