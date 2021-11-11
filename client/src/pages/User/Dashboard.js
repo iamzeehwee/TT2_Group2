@@ -2,6 +2,7 @@ import { MDBBtn, MDBIcon, MDBDataTable, MDBCardImage, MDBCardTitle, MDBCol, MDBC
 import React from "react";
 import DashboardSideNav from "../../components/DashboardSideNav";
 import ConfirmModal from "../../components/ConfirmModal";
+import AddExpenseModal from "../../components/AddExpenseModal";
 import axios from '../../axios';
 
 const sideNavWidth = 240;
@@ -294,10 +295,12 @@ class Dashboard extends React.Component {
           </MDBCol>
         </MDBRow>
             {this.displayExpenses()}
+            
           </div>
         </MDBContainer>
 
         <ConfirmModal message={deleteProjectConfirmationMessage} submit={this.deleteProject} modal={this.state.confirmationModal} toggleModal={this.toggleConfirmationModal}></ConfirmModal>
+        
       </>
     );
   }
