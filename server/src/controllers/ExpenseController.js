@@ -32,6 +32,7 @@ module.exports = {
 
   //To be updated
   async updateExpenses (req, res) {
+    console.log("THE REQ DATA IS", req.body);
     const projectId = `${req.body.projectId}`;
     const categoryId = `${req.body.categoryId}`;
     const name = `${req.body.name}`;
@@ -40,13 +41,14 @@ module.exports = {
     const createdBy = `${req.body.createdBy}`;
     const updatedBy = `${req.body.updatedBy}`
     const sqlInsertExpense = `
-    UPDATE EXPENSE set category_id = ?, name = ?, description = ?, amount = ? updated_at = NOW() updated_by = ? WHERE project_id = ?)`;
-    connection.query(sqlInsertExpense, [projectId, categoryId, name, description, amount, createdBy, updatedBy], (err, result) => {
+    UPDATE EXPENSE set category_id = ?, name = ?, description = ?, amount = ?, updated_at = NOW(), created_by = ?, updated_by = ? WHERE project_id = ?`;
+    connection.query(sqlInsertExpense, [categoryId, name, description, amount, createdBy, updatedBy, projectId], (err, result) => {
       // If no error
       if (!err) {
         res.json(result);
       } else {
-        res.status(400).json({ msg: `Error when inserting expense to ${project_id}` });
+        console.log("ERROR R R R R R", err)
+        res.status(400).json({ msg: `Error when inserting expense to ` });
       }
     });
   },
