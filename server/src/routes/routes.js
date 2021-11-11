@@ -8,16 +8,17 @@ module.exports = (app) => {
 
   app.post("/register", AuthenticationController.register);
 
-  app.post("/expenses", AuthenticationController.register);
+  app.put("/expense/update", ExpensesController.updateExpenses);
 
   app.post("/expense/add", ExpensesController.addExpenses);
 
-  app.get("/catergory", CategoryController.getCategory);
+  app.get("/expense/:id", ExpensesController.getExpenseByProjectId);  // Pass in project Id
 
-  app.get("/project/:id", ProjectController.getCategory);
+  app.put("/project/:id", ExpensesController.updateExpenses); // Pass in expense Id
 
-  app.get("/:whatYouwantToPut/", (req, res) => {
-    console.log("hohooh", req.body, req.params, req.query);
-    res.send("Hello World!");
-  });
+  app.get("/category", CategoryController.getCategory);
+
+  app.post("/project", ProjectController.addProject);
+
+  app.get("/project/:id", ProjectController.getProjectBasedOnUser); // Pass in User Id
 };
