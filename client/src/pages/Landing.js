@@ -6,7 +6,7 @@ import './Landing.css';
 class Landing extends React.Component {
 
   loginBtn = () => {
-    if (this.props.auth) {
+    if (localStorage.getItem("isLoggedIn")) {
         return (
           <MDBBtn outline color='white' onClick={() => this.props.history.push(`/dashboard`)}>
           <MDBIcon icon="home" size="lg" className="mx-2" />
